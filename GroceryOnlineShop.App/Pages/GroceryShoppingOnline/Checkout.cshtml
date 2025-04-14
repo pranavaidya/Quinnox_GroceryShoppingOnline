@@ -1,0 +1,51 @@
+﻿@page
+@model GroceryOnlineShop.App.Pages.GroceryShoppingOnline.CheckoutModel
+@{
+}
+
+<div class="container">
+    <div class="row p-0 m-0 gap-0">
+        <div class="col-auto">
+            <div class="blockquote">
+                <dl>
+                    <dt>Customer No.</dt>
+                    <dd>@Model.CustomerId</dd>
+                    <dt>Customer Name</dt>
+                    <dd>@ViewData["CustomerName"] </dd>
+                    <dt>Order No.</dt>
+                    <dd>@Model.GroceryOrder!.GroceryOrderId</dd>
+                    <dt>No. of Items</dt>
+                    <dd>@Model.GroceryOrder.NoOfItems</dd>
+                    <dt>Total Cost</dt>
+                    <dd>@Model.GroceryOrder.TotalAmount</dd>
+                </dl>
+            </div>
+            <div class="blockquote">
+                <div class="row p-2 m-0 gap-0 justify-content-center">
+                    <form method="post">
+                        <input type="hidden" name="custId" id="custId" asp-for="CustomerId" />
+                        <input type="hidden" name="orderId" id="orderId" asp-for="GroceryOrder.GroceryOrderId" />
+                        <input type="checkbox" class="p-2 w-auto" onchange="updateLoyaltyMembership()" asp-for="GroceryOrder.LoyaltyMembershipApplicable" />
+                        <label for="loyaltyMembership" class="form-check-label">Loyalty Membership Discount</label>
+                        <button hidden="hidden" type="submit" id="loyaltymembershipchange" asp-page="" asp-page-handler="LoyaltyMembershipChanged"></button>
+                    </form>
+                </div>
+                <div class="row p-2 m-0 gap-0 justify-content-center">
+                    <form method="post">
+                        <button type="submit" class="btn btn-primary w-auto px-2" asp-page="" asp-page-handler="ConfirmOrder" asp-route-orderId="@Model.GroceryOrder.GroceryOrderId">Confirm Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function updateLoyaltyMembership() {
+            var button = document.getElementById("loyaltymembershipchange");
+            button.click();
+        }
+    </script>
+}
+

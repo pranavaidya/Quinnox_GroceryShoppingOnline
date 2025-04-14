@@ -1,0 +1,71 @@
+﻿@page
+@model GroceryOnlineShop.App.Pages.GroceryShoppingOnline.OrderConfirmedModel
+@{
+}
+
+
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="card-title">Customer : #@Model.GroceryOrder!.CustomerId </div>
+                <div class="card-subtitle">@ViewData["CustomerName"]?.ToString()</div>
+            </div>
+            <div class="row">
+                <h3>Your order is confirmed</h3>
+            </div>
+        </div>
+        <div class="card-body">
+            @if (Model.GroceryOrder != null)
+            {
+                <div class="container-fluid">
+                    <div class="row p-2 m-0 justify-content-center align-content-start">
+                        <div class="col-4">
+                            <dl>
+                                <dt>
+                                    Order No. :
+                                </dt>
+                                <dd>
+                                    @Model.GroceryOrder!.GroceryOrderId
+                                </dd>
+                                <dt>
+                                    Order Date :
+                                </dt>
+                                <dd>
+                                    @Model.GroceryOrder.OrderDate
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="row p-2 m-0 justify-content-center align-content-start">
+                        <div class="col-4">
+                            <h5>Items :</h5>
+                            <dl>
+                                @foreach (var orderItem in Model.GroceryOrder.OrderItems)
+                                {
+                                    var itemTitle = orderItem.ItemName + (!string.IsNullOrEmpty(orderItem.ItemDescription) ? "\"" + orderItem.ItemDescription + "\"" : string.Empty);
+                                    <dd>
+                                        @itemTitle - Qty: @orderItem.Quantity
+                                    </dd>
+                                }
+                                @if (Model.GroceryOrder.LoyaltyMembershipApplicable)
+                                {
+                                    <dd>
+                                        EasyGroceries Loyalty Membership
+                                    </dd>
+                                }
+                            </dl>
+                            <h5>Total: @Model.GroceryOrder.TotalAmount</h5>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="card-footer border-top border-2 border-light px-0 py-2">
+            <div class="row w-100 justify-content-center">
+                <a class="w-auto btn btn-primary px-2" asp-page="/Index">More Shopping...</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,71 @@
+﻿@page
+@model GroceryOnlineShop.App.Pages.GroceryShoppingOnline.IndexModel
+@{
+}
+
+<div class="container">
+    <form method="post" asp-page="" asp-page-handler="" asp-route-customerId="@Model.CustomerId">
+        <div class="row">
+            <h4>Customer: <h5>@ViewData["CustomerName"]?.ToString()</h5></h4>
+            <input type="hidden" asp-for="CustomerId" />
+        </div>
+
+        <div class="row flex-wrap">
+            <div class="col-auto">
+                @foreach (var item in Model.GroceryItemsAvailableToPurchase)
+                {
+                    <div class="card m-1 border border-light">
+                        <div class="card-header bg-secondary text-white">
+                            @item.Title
+                        </div>
+
+                        <div class="card-body bg-light text-black">
+                            @if (!string.IsNullOrEmpty(item.Description))
+                            {
+                                @item.Description
+                            }
+                            <input type="hidden" asp-for="@item.Id" />
+                            <input type="hidden" asp-for="@item.AvailableQuantity" />
+                        </div>
+
+                        <div class="card-footer border-top border-2 border-light">
+                            <div class="row justify-content-center align-items-center">
+                                @{
+                                    var shoppingCartItem = Model.GroceryShoppingCart?.CartItems.Find(ci => ci.GroceryItemId == item.Id);
+                                    var quantityToDisplay = "0";
+                                    var disableDecrease = true;
+                                    var disableIncrease = false;
+                                    if (shoppingCartItem != null)
+                                    {
+                                        quantityToDisplay = shoppingCartItem.Quantity.ToString();
+                                        disableDecrease = (shoppingCartItem.Quantity == 0);
+                                        disableIncrease = (shoppingCartItem.Quantity == item.AvailableQuantity);
+                                    }
+                                }
+                                @if (shoppingCartItem == null || shoppingCartItem.Quantity == 0)
+                                {
+                                    <div class="col-auto w-auto m-0 p-0 gap-0">
+                                        <button type="submit" disabled="@disableIncrease" class="w-auto p-2 btn btn-outline-secondary rounded-0" asp-page="" asp-page-handler="IncreaseQuantity" asp-route-itemid="@item.Id">Add to Cart</button>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-2 p-0 m-0 gap-0">
+                                        <button type="submit" disabled="@disableDecrease" class="w-auto p-2 btn btn-outline-secondary rounded-0" asp-page="" asp-page-handler="DecreaseQuantity" asp-route-itemid="@item.Id" asp-route-customerId="@Model.CustomerId"> - </button>
+                                    </div>
+                                    <div class="col-2 p-0 m-auto">@quantityToDisplay</div>
+                                    <div class="col-2 p-0 m-0 gap-0">
+                                        <button type="submit" disabled="@disableIncrease" class="w-auto p-2 btn btn-outline-secondary rounded-0" asp-page="" asp-page-handler="IncreaseQuantity" asp-route-itemid="@item.Id"> + </button>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row p-2 m-0 gap-0 justify-content-center align-items-center">
+            <button type="submit" class="w-auto btn btn-primary px-2">Check-out</button>
+        </div>
+    </form>
+</div>
